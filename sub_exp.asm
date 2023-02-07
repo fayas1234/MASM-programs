@@ -1,0 +1,59 @@
+;Program to perform subtraction
+ASSUME CS:CODE,DS:DATA
+
+DATA SEGMENT
+	N1 DW 1234H
+	N2 DW 0034H
+DATA ENDS
+
+
+CODE SEGMENT
+	PRINT PROC
+		MOV CH,04H
+		MOV CL,04H
+		
+		L2:
+			ROL BX,CL
+			
+			MOV DL,BL
+			AND DL,0FH
+			
+			CMP DL,09H
+			
+			JBE L4
+			
+			ADD DL,07H
+		
+		L4:
+			ADD DL,30H
+			
+			MOV AH,02H
+			INT 21H
+			
+			DEC CH
+			JNZ L2
+	RET 
+	PRINT ENDP
+	
+	START:
+		MOV AX,DATA
+		MOV DS,AX
+		
+		MOV AX,N1
+		MOV BX,N2
+		
+		SUB AX,BX
+		
+		MOV BX,AX
+		
+		CALL PRINT
+		
+		MOV AH,4CH
+		INT 21H
+
+CODE ENDS 
+END START	
+	
+
+		
+	
