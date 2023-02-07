@@ -1,0 +1,66 @@
+;PROGRAM TO PERFORM STRING REVERSAL
+
+ASSUME CS:CODE,DS:DATA
+
+DATA SEGMENT
+	STR1 DB 100 DUP('?')
+	STR2 DB 100 DUP('?')
+DATA ENDS
+
+CODE SEGMENT
+	START:	
+		MOV AX,DATA
+		MOV DS,AX
+		
+		MOV BL,01H
+		LEA SI,STR1
+		LEA DI,STR2
+		
+		MOV AH,01H
+		INT 21H
+		
+		MOV [SI],AL
+		INC SI
+		
+		INPUT:
+			CMP AL,13
+			JZ EXIT
+			
+			MOV [SI],AL
+			INC SI
+			
+			INC BL
+			MOV AH,01H
+			INT 21H
+			JMP INPUT
+		
+		EXIT:
+			DEC SI
+			MOV CL,BL
+			DEC CL
+			
+			LP:
+				MOV DL,[SI]
+				MOV [DI],DL
+				
+				DEC SI
+				INC DI
+				
+				LOOP LP
+		
+		MOV AL,'$'
+		
+		MOV [DI],AL
+		
+		LEA DX,STR2
+		MOV AH,09H
+		INT 21H
+		
+		MOV AH,4CH
+		INT 21H
+CODE ENDS
+END START
+		
+			
+		
+
