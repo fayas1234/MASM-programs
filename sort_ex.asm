@@ -1,0 +1,100 @@
+;program to implement sorting of 16 bit numbers
+
+ASSUME CS:CODE,DS:DATA
+
+DATA SEGMENT
+	ARRAY DW 0202H,4000H,000FH,0013H,0002H,000AH,"$"
+DATA ENDS
+
+
+
+INTEGER_PRINT MACRO X
+	
+	MOV BX,X
+	
+	MOV CH,04H
+	MOV CL,04H
+	
+	LP:
+		ROL BX,CL
+
+		MOV DL,BL
+		AND DL,0FH
+		
+		CMP DL,09H
+		
+		JC PR
+		ADD DL,07H
+	
+	PR:
+		ADD DL,30H
+		
+		MOV AH,02H
+		INT 21H
+		
+		DEC CH 
+		JNZ LP
+			
+ENDM
+
+
+STACK SEGMENT
+
+STACK ENDS
+
+
+CODE SEGMENT
+
+	START:
+		MOV AX,DATA
+		MOV DS,AX
+		
+		MOV BL,05H
+		
+	SORT:
+		LEA SI,ARRAY
+		MOV CL,BL
+		
+	ITR:
+		MOV AX,[SI]
+		
+		ADD SI,02H
+		
+		CMP AX,[SI]
+		JC LESS
+		
+		XCHG AX,[SI]
+		XCHG AX,[SI-2]
+
+	LESS:
+		LOOP ITR
+		
+		SUB BL,01H
+		
+		CMP BL,00H
+		JNZ SORT
+		
+		LEA DI,ARRAY
+		
+		MOV DH,06H
+		
+	PRINT:
+		MOV BX,[DI]
+		
+		INTEGER_PRINT BX
+		
+		ADD DI,02H
+		
+		MOV DL,0AH
+		MOV AH,02H
+		INT 21H
+		
+		DEC DH
+		JNZ PRINT
+		
+		MOV AH,4CH
+		INT 21H
+CODE ENDS
+END START
+		
+		
